@@ -29,12 +29,38 @@ jobs:
 
       - name: Generate Terraform plan
         run: terraform plan -out=tfplan
+
+      - name: Save Terraform Plan
+        uses: actions/upload-artifact@v2
+        with:
+          name: plan
+          path: tfplan
+
+  review: 
+    needs: plan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v2
+        with:
+          name: plan
+      
+      - name: Review Plan
+        run: |
+          output = $(cat plan)
+          echo "$output"
   
   apply:
-    needs: plan
+    needs: [plan, review]
     runs-on: ubuntu-latest
     environment: Reviewer
 
     steps:
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v2
+        with:
+          name: plan
+
       - name: Deploy EC2 instance
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve plan
