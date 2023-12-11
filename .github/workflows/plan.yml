@@ -29,13 +29,13 @@ jobs:
         run: terraform init
 
       - name: Generate Terraform plan
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan.out
 
       - name: Save Terraform Plan 
         uses: actions/upload-artifact@v3
         with:
-          name: tfplan
-          path: tfplan
+          name: tfplan.out
+          path: tfplan.out
 
   review: 
     needs: plan
@@ -49,14 +49,9 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.1.7"
-
-      - name: Save Terraform Plan 
-        uses: actions/download-artifact@v3
-        with:
-          name: tfplan
       
       - name: Review Plan
-        run: terraform show tfplan
+        run: terraform show tfplan.out
   
   apply:
     needs: [plan, review]
@@ -68,6 +63,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.1.7"
-          
+
       - name: Deploy EC2 instance
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve tfplan.out
