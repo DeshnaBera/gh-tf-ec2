@@ -31,7 +31,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Save Terraform Plan
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: plan
           path: tfplan
@@ -43,12 +43,12 @@ jobs:
     steps:
 
       - name: Download Terraform Plan
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: plan
       
       - name: Review Plan
-        run: cat plan/terraform.plan
+        run: cat tfplan
   
   apply:
     needs: [plan, review]
