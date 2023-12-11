@@ -48,7 +48,7 @@ jobs:
           name: plan
       
       - name: Review Plan
-        run: cat tfplan
+        run: terraform show tfplan
   
   apply:
     needs: [plan, review]
