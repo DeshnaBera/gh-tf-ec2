@@ -29,29 +29,16 @@ jobs:
         run: terraform init
 
       - name: Generate Terraform plan
-        run: terraform plan -out=tfplan.out
+        run: terraform plan -out=tfplan
 
       - name: Save Terraform Plan 
         uses: actions/upload-artifact@v3
         with:
-          name: tfplan.out
-          path: tfplan.out
+          name: tfplan
+          path: tfplan
 
-  review: 
-    needs: plan
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.1.7"
-      
       - name: Review Plan
-        run: terraform show tfplan.out
+        run: terraform show tfplan
   
   apply:
     needs: [plan, review]
@@ -65,4 +52,4 @@ jobs:
           terraform_version: "1.1.7"
 
       - name: Deploy EC2 instance
-        run: terraform apply -auto-approve tfplan.out
+        run: terraform apply -auto-approve tfplan
