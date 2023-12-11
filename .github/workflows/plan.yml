@@ -46,5 +46,11 @@ jobs:
     environment: Reviewer
 
     steps:
+      - name: Download Terraform Plan 
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: tfplan
+
       - name: Deploy EC2 instance
-        run: terraform apply -auto-approve 
+        run: terraform apply -auto-approve tfplan
