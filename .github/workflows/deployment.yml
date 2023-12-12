@@ -48,7 +48,7 @@ jobs:
           name: tfplan
 
       - name: Review Terraform Plan
-        run: terraform show tfplan/terraform.tfplan | sed 's/^/  /'
+        run: terraform show tfplan
 
   apply:
     runs-on: ubuntu-latest
