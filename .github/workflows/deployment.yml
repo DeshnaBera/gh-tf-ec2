@@ -24,17 +24,15 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init
-      - name: Clean up Old Artifacts
-        run: rm -rf tfplan-*
-        
+
       - name: Generate Terraform Plan
-        run: terraform plan -out=tfplan-${{ github.run_number }}
+        run: terraform plan -out=tfplan
 
       - name: Save Terraform Plan as Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: tfplan-${{ github.run_number }}
-          path: tfplan-${{ github.run_number }}
+          name: tfplan
+          path: tfplan
 
   review:
     runs-on: ubuntu-latest
@@ -52,10 +50,10 @@ jobs:
       - name: Download Terraform Plan Artifact
         uses: actions/download-artifact@v3
         with:
-          name: tfplan-${{ github.run_number }}
+          name: tfplan
 
       - name: Review Terraform Plan
-        run: terraform show tfplan-${{ github.run_number }}
+        run: terraform show tfplan
 
   apply:
     runs-on: ubuntu-latest
@@ -74,7 +72,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy EC2 Instance
-        run: terraform apply -auto-approve tfplan-${{ github.run_number }}
+        run: terraform apply -auto-approve tfplan
 
-      - name: Show Outputs
-        run: terraform show
+#      - name: Show Outputs
+#        run: terraform show

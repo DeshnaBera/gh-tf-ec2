@@ -7,9 +7,18 @@ terraform {
   }
 }
 
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = "mytf-state-file"
+    key    = "network/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+
 provider "aws" {
   region = "us-east-1"
-#  profile = "default"
 }
 
 resource "aws_instance" "ec2" {
