@@ -24,7 +24,9 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init
-
+      - name: Clean up Old Artifacts
+        run: rm -rf tfplan-*
+        
       - name: Generate Terraform Plan
         run: terraform plan -out=tfplan-${{ github.run_number }}
 
