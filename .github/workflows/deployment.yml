@@ -26,7 +26,7 @@ jobs:
         run: terraform init
 
       - name: Generate Terraform Plan
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan-${{ github.run_number }}
 
       - name: Save Terraform Plan as Artifact
         uses: actions/upload-artifact@v3
@@ -46,14 +46,14 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.1.7
-          
+
       - name: Download Terraform Plan Artifact
         uses: actions/download-artifact@v3
         with:
           name: tfplan
 
       - name: Review Terraform Plan
-        run: terraform show tfplan
+        run: terraform show tfplan-${{ github.run_number }}
 
   apply:
     runs-on: ubuntu-latest
@@ -72,7 +72,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy EC2 Instance
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve tfplan-${{ github.run_number }}
 
       - name: Show Outputs
         run: terraform show
